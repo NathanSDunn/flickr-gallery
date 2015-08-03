@@ -1,4 +1,4 @@
-<?php namespace FlickrGallery\TestOverride;
+<?php namespace FlickrGallery\Model\RPC;
 
 /**
  * Override file_get_contents() in current namespace for testing
@@ -6,7 +6,7 @@
  */
 function file_get_contents($path)
 {
-    return $path;
+    return 'RESOURCE_FROM:' . $path;
 }
 
 use FlickrGallery\Model\RPC\HttpsGetWrapper;
@@ -32,96 +32,44 @@ class HttpsGetWrapperDouble extends HttpsGetWrapper
 
 class HttpsGetWrapperTest extends \PHPUnit_Framework_TestCase
 {
-
-    const TEST_CLASS = '\FlickrGallery\Model\RPC\HttpsGetWrapper';
-
-    protected static function getMethod($name)
+    /*
+     * @covers HttpsGetWrapper::setHost
+     */
+    public function testSetHost()
     {
-        $class = new \ReflectionClass(self::TEST_CLASS);
-        $method = $class->getMethod($name);
-        $method->setAccessible(true);
-        return $method;
+        $testSubject = new HttpsGetWrapperDouble();
+        $testSubject->setHost('c');
+        $this->assertSame('c', $testSubject->getHost());
     }
 
     /*
-     * @covers HttpsGetWrapper::__construct
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage HttpsGetWrapper::INVALID_HOST_PARAM
+     * @covers HttpsGetWrapper::setHost
      */
-    public function testConstructInvalidHostException()
+    public function testSetHostChain()
     {
-        $this->setExpectedException('InvalidArgumentException');
-        new HttpsGetWrapper(1, 'a');
+        $testSubject = new HttpsGetWrapper();
+        $testSubject->setHost('c');
+        $this->assertSame($testSubject, $testSubject->setHost(array()));
     }
 
     /*
-     * @covers HttpsGetWrapper::__construct
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage HttpsGetWrapper::INVALID_HOST_PARAM
+     * @covers HttpsGetWrapper::setHost
      */
-    public function testConstructInvalidHostExceptionMessage()
+    public function testSetResource()
     {
-        try {
-            new HttpsGetWrapper(1, 'a');
-        } catch (\InvalidArgumentException $e) {
-            $this->assertSame(
-                HttpsGetWrapper::INVALID_HOST_PARAM, $e->getMessage()
-            );
-        }
+        $testSubject = new HttpsGetWrapperDouble();
+        $testSubject->setResource('c');
+        $this->assertSame('c', $testSubject->getResource());
     }
 
     /*
-     * @covers HttpsGetWrapper::__construct
+     * @covers HttpsGetWrapper::setResource
      */
-    public function testConstructValidHost()
+    public function testSetResourceChain()
     {
-        $testSubject = new HttpsGetWrapperDouble('a', 'b');
-        $this->assertSame('a', $testSubject->getHost());
-    }
-
-    /*
-     * @covers HttpsGetWrapper::__construct
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage HttpsGetWrapper::INVALID_HOST_PARAM
-     */
-    public function testConstructInvalidResourceException()
-    {
-        $this->setExpectedException('InvalidArgumentException');
-        new HttpsGetWrapper('a', 1);
-    }
-
-    /*
-     * @covers HttpsGetWrapper::__construct
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage HttpsGetWrapper::INVALID_HOST_PARAM
-     */
-    public function testConstructInvalidResourceExceptionMessage()
-    {
-        try {
-            new HttpsGetWrapper('a', 1);
-        } catch (\InvalidArgumentException $e) {
-            $this->assertSame(
-                HttpsGetWrapper::INVALID_RESOURCE_PARAM, $e->getMessage()
-            );
-        }
-    }
-
-    /*
-     * @covers HttpsGetWrapper::__construct
-     */
-    public function testConstructValidResource()
-    {
-        $testSubject = new HttpsGetWrapperDouble('a', 'b');
-        $this->assertSame('b', $testSubject->getResource());
-    }
-
-    /*
-     * @covers HttpsGetWrapper::__construct
-     */
-    public function testConstructValidParams()
-    {
-        $testSubject = new HttpsGetWrapperDouble('a', 'b');
-        $this->assertSame(array(), $testSubject->getParams());
+        $testSubject = new HttpsGetWrapper();
+        $testSubject->setResource('c');
+        $this->assertSame($testSubject, $testSubject->setResource(array()));
     }
 
     /*
@@ -129,46 +77,128 @@ class HttpsGetWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetParams()
     {
-        $testSubject = new HttpsGetWrapperDouble('a', 'b');
-        $testSubject->setParams(array('c'));
-        $this->assertSame(array('c'), $testSubject->getParams());
+        $testSubject = new HttpsGetWrapperDouble();
+        $testSubject->setParams('c');
+        $this->assertSame('c', $testSubject->getParams());
     }
 
     /*
      * @covers HttpsGetWrapper::setParams
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage HttpsGetWrapper::INVALID_HOST_PARAM
      */
     public function testSetParamsChain()
     {
-        $testSubject = new HttpsGetWrapperDouble('a', 'b');
-        $testSubject->setParams(array('c'));
+        $testSubject = new HttpsGetWrapper();
+        $testSubject->setParams('c');
         $this->assertSame($testSubject, $testSubject->setParams(array()));
     }
 
     /*
-     * @covers HttpsGetWrapper::getQuery
+     * @covers HttpsGetWrapper::getURI
+     * @expectedException \DomainException
+     * @expectedExceptionMessage HttpsGetWrapper::INVALID_HOST_PARAM
      */
-    public function testGetQueryEmpty()
+    public function testGetURIInvalidHostException()
     {
-        $testSubject = new HttpsGetWrapper('a', 'b');
-        $testMethod = self::getMethod('getQuery');
-        $this->assertSame(
-            '', $testMethod->invokeArgs($testSubject, array())
-        );
+        $this->setExpectedException('DomainException');
+        $testSubject = new HttpsGetWrapper();
+        $testSubject->getURI();
     }
 
     /*
-     * @covers HttpsGetWrapper::getQuery
+     * @covers HttpsGetWrapper::getURI
+     * @expectedException \DomainException
+     * @expectedExceptionMessage HttpsGetWrapper::INVALID_HOST_PARAM
      */
-    public function testGetQueryHasParams()
+    public function testGetURIInvalidHostExceptionMessage()
     {
-        $testSubject = new HttpsGetWrapper('a', 'b');
-        $testSubject->setParams(array('d', 'e'));
-        $testMethod = self::getMethod('getQuery');
-        $this->assertSame(
-            '?d&e', $testMethod->invokeArgs($testSubject, array())
-        );
+        $testSubject = new HttpsGetWrapper();
+        try {
+            $testSubject->getURI();
+        } catch (\DomainException $e) {
+            $this->assertSame(
+                HttpsGetWrapper::INVALID_HOST_PARAM, $e->getMessage()
+            );
+        }
+    }
+
+    /*
+     * @covers HttpsGetWrapper::getURI
+     */
+    public function testGetURIValidHost()
+    {
+        $testSubject = new HttpsGetWrapperDouble();
+        $testSubject->setHost('a');
+        $this->assertSame('a', $testSubject->getHost());
+    }
+
+    /*
+     * @covers HttpsGetWrapper::getURI
+     * @expectedException \DomainException
+     * @expectedExceptionMessage HttpsGetWrapper::INVALID_RESOURCE_PARAM
+     */
+    public function testGetURIInvalidResourceException()
+    {
+        $testSubject = new HttpsGetWrapper();
+        $testSubject->setHost('a');
+
+        $this->setExpectedException('DomainException');
+        $testSubject->getURI();
+    }
+
+    /*
+     * @covers HttpsGetWrapper::getURI
+     * @expectedException \DomainException
+     * @expectedExceptionMessage HttpsGetWrapper::INVALID_RESOURCE_PARAM
+     */
+    public function testGetURIInvalidResourceExceptionMessage()
+    {
+        $testSubject = new HttpsGetWrapper();
+        $testSubject->setHost('a');
+
+        try {
+            $testSubject->getURI();
+        } catch (\DomainException $e) {
+            $this->assertSame(
+                HttpsGetWrapper::INVALID_RESOURCE_PARAM, $e->getMessage()
+            );
+        }
+    }
+
+    /*
+     * @covers HttpsGetWrapper::getURI
+     */
+    public function testGetURIValidResource()
+    {
+        $testSubject = new HttpsGetWrapper();
+        $testSubject
+            ->setHost('a')
+            ->setResource('b');
+        $this->assertSame('https://a/b/', $testSubject->getURI());
+    }
+
+    /*
+     * @covers HttpsGetWrapper::getURI
+     */
+    public function testGetURIEmptyParams()
+    {
+        $testSubject = new HttpsGetWrapper();
+        $testSubject
+            ->setHost('a')
+            ->setResource('b');
+        $this->assertSame('https://a/b/', $testSubject->getURI());
+    }
+
+    /*
+     * @covers HttpsGetWrapper::getURI
+     */
+    public function testGetURIValidParams()
+    {
+        $testSubject = new HttpsGetWrapper();
+        $testSubject
+            ->setHost('a')
+            ->setResource('b')
+            ->setParams('c');
+        $this->assertSame('https://a/b/?c', $testSubject->getURI());
     }
 
     /*
@@ -176,10 +206,14 @@ class HttpsGetWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testGet()
     {
-        $testSubject = new HttpsGetWrapper('a', 'b');
-        $testSubject->setParams(array('mocky', 'mockmock'));
+        $testSubject = new HttpsGetWrapper();
+        $testSubject
+            ->setHost('localhost')
+            ->setResource('endpoint')
+            ->setParams('test=magic');
         $this->assertSame(
-            'https://a/b?mocky&mockmock', $testSubject->getURI()
+            'RESOURCE_FROM:https://localhost/endpoint/?test=magic',
+            $testSubject->get()
         );
     }
 
