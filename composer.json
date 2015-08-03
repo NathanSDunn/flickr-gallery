@@ -20,6 +20,12 @@
                 "src\\model",
                 "src\\view",
                 "src\\controller"
+            ],            
+            "FlickrGallery\\Model\\": [
+                "src\\model"
+            ],         
+            "FlickrGallery\\Model\\RPC\\": [
+                "src\\model\\rpc"
             ]
         }
     }
