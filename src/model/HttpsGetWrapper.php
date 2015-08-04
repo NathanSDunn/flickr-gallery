@@ -1,4 +1,4 @@
-<?php namespace FlickrGallery\Model\RPC;
+<?php namespace FlickrGallery\Model;
 
 /**
  * A simple wrapper around HTTP GET requests

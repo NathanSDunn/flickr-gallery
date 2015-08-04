@@ -1,4 +1,4 @@
-<?php namespace FlickrGallery\Model\RPC;
+<?php namespace FlickrGallery\Model;
 
 /**
  * Override file_get_contents() in current namespace for testing
@@ -9,9 +9,9 @@ function file_get_contents($path)
     return 'RESOURCE_FROM:' . $path;
 }
 
-use FlickrGallery\Model\RPC\HttpsGetWrapper;
+use FlickrGallery\Model\HttpsGetWrapper;
 
-class HttpsGetWrapperDouble extends HttpsGetWrapper
+class MockHttpsGetWrapper extends HttpsGetWrapper
 {
     function getHost()
     {
@@ -37,7 +37,7 @@ class HttpsGetWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetHost()
     {
-        $testSubject = new HttpsGetWrapperDouble();
+        $testSubject = new MockHttpsGetWrapper();
         $testSubject->setHost('c');
         $this->assertSame('c', $testSubject->getHost());
     }
@@ -57,7 +57,7 @@ class HttpsGetWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetResource()
     {
-        $testSubject = new HttpsGetWrapperDouble();
+        $testSubject = new MockHttpsGetWrapper();
         $testSubject->setResource('c');
         $this->assertSame('c', $testSubject->getResource());
     }
@@ -77,7 +77,7 @@ class HttpsGetWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetParams()
     {
-        $testSubject = new HttpsGetWrapperDouble();
+        $testSubject = new MockHttpsGetWrapper();
         $testSubject->setParams('c');
         $this->assertSame('c', $testSubject->getParams());
     }
@@ -126,7 +126,7 @@ class HttpsGetWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetURIValidHost()
     {
-        $testSubject = new HttpsGetWrapperDouble();
+        $testSubject = new MockHttpsGetWrapper();
         $testSubject->setHost('a');
         $this->assertSame('a', $testSubject->getHost());
     }
