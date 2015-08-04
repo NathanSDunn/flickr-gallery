@@ -7,8 +7,6 @@
 class PhotoSearch
 {
 
-    const INVALID_KEYWORD = 'keyword must be a string';
-
     //configuration
     protected $host = 'api.flickr.com';
     protected $resource = 'services/rest';
@@ -22,6 +20,7 @@ class PhotoSearch
     //data
     protected $pages;
     protected $photos;
+    protected $pagination;
 
     public function __construct(
     HttpsGetWrapper $http_wrapper, PhotoFormatter $photo_formatter)
@@ -41,7 +40,7 @@ class PhotoSearch
             'text=' . $keyword;
     }
 
-    public function search($keyword, $page = 1)
+    public function search($keyword, $page)
     {
 
         $response = $this->http_wrapper
@@ -54,6 +53,7 @@ class PhotoSearch
 
         $this->pages = $data['photos']['pages'];
         $this->photos = $data['photos']['photo'];
+        $this->pagination = $this->buildPagination($page, $this->pages);
 
         return $this;
     }
@@ -63,9 +63,40 @@ class PhotoSearch
         return $this->pages;
     }
 
+    public function getPagination()
+    {
+        return $this->pagination;
+    }
+
     public function getPhotos()
     {
         return $this->photo_formatter->format($this->photos);
+    }
+
+    private function buildPagination($curr_page, $total_pages)
+    {
+        $pagination = $this->getPrevPages($curr_page);
+        $pagination[] = array('number' => $curr_page, 'inactive' => false);
+        return $this->getNextPages($curr_page, $total_pages, $pagination);
+    }
+
+    private function getNextPages($curr_page, $total_pages, $pagination)
+    {
+        $max_pages = $curr_page + 14;
+        for ($i = $curr_page + 1; $i < $total_pages && $i < $max_pages; $i++) {
+            $pagination[] = array('number' => $i, 'inactive' => true);
+        }
+        return $pagination;
+    }
+
+    private function getPrevPages($curr_page)
+    {
+        $next_pages = array();
+        $min_page = $curr_page - 14;
+        for ($i = $curr_page - 1; $i > 0 && $i > $min_page; $i--) {
+            $next_pages[] = array('number' => $i, 'inactive' => true);
+        }
+        return array_reverse($next_pages);
     }
 
 }

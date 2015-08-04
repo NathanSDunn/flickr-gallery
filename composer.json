@@ -14,15 +14,12 @@
         "phpunit/phpunit": "4.7.*"
     },
     "autoload": {
-        "psr-4": {
-            "FlickrGallery\\": [
-                "src",
-                "src\\model",
-                "src\\view",
-                "src\\controller"
-            ],            
+        "psr-4": {       
             "FlickrGallery\\Model\\": [
                 "src\\model"
+            ],           
+            "FlickrGallery\\Controller\\": [
+                "src\\controller"
             ]
         }
     }

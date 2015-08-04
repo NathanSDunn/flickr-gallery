@@ -1,9 +1,5 @@
 <?php namespace FlickrGallery\Model;
 
-/**
- * Description of PhotoFormatter
- *
- */
 class PhotoFormatter
 {
     public function getUrl(Array $photo)
@@ -21,7 +17,7 @@ class PhotoFormatter
         foreach ($photos as $photo) {
             $url = $this->getUrl($photo);
             $formatted[] = array(
-                'thumbnail' => $url . '_t.jpg',
+                'thumbnail' => $url . '_q.jpg',
                 'big_url' => $url . '.jpg'
             );
         }

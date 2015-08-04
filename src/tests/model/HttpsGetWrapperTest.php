@@ -11,7 +11,7 @@ function file_get_contents($path)
 
 use FlickrGallery\Model\HttpsGetWrapper;
 
-class MockHttpsGetWrapper extends HttpsGetWrapper
+class PermissiveHttpsGetWrapper extends HttpsGetWrapper
 {
     function getHost()
     {
@@ -37,7 +37,7 @@ class HttpsGetWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetHost()
     {
-        $testSubject = new MockHttpsGetWrapper();
+        $testSubject = new PermissiveHttpsGetWrapper();
         $testSubject->setHost('c');
         $this->assertSame('c', $testSubject->getHost());
     }
@@ -57,7 +57,7 @@ class HttpsGetWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetResource()
     {
-        $testSubject = new MockHttpsGetWrapper();
+        $testSubject = new PermissiveHttpsGetWrapper();
         $testSubject->setResource('c');
         $this->assertSame('c', $testSubject->getResource());
     }
@@ -77,7 +77,7 @@ class HttpsGetWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetParams()
     {
-        $testSubject = new MockHttpsGetWrapper();
+        $testSubject = new PermissiveHttpsGetWrapper();
         $testSubject->setParams('c');
         $this->assertSame('c', $testSubject->getParams());
     }
@@ -126,7 +126,7 @@ class HttpsGetWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetURIValidHost()
     {
-        $testSubject = new MockHttpsGetWrapper();
+        $testSubject = new PermissiveHttpsGetWrapper();
         $testSubject->setHost('a');
         $this->assertSame('a', $testSubject->getHost());
     }

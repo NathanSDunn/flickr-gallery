@@ -34,7 +34,7 @@ class PhotoFormatterTest extends PHPUnit_Framework_TestCase
         $photos = array(array(1));
         $expected = array(
             array(
-                'thumbnail' => 'MockUrl_t.jpg',
+                'thumbnail' => 'MockUrl_q.jpg',
                 'big_url' => 'MockUrl.jpg',
             )
         );
