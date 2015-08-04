@@ -1,0 +1,87 @@
+@color-background: #99afe9;
+@gutter: 5px;
+@gutter-x-2: 2 * @gutter;
+@gutter-x-4: 4 * @gutter;
+
+body {
+    width: 100%;
+    background-color: @color-background;
+    color: aliceblue;
+    text-align: center;
+    font-family: sans-serif;
+    margin: @gutter;
+}
+h1 {
+    margin:0;
+}
+
+
+/*gallery images centering*/
+@photos-no-wrap : 978px;
+@photos-min-no-wrap: 396px;
+@photo-min-size : 174px;
+@photo-size: @photo-min-size + @gutter-x-4;
+.gallery{
+    width: @photo-min-size;
+    margin: 0 auto;
+    overflow:hidden;
+    @media only screen and (min-width : @photos-min-no-wrap) {
+        width: (2 * @photo-min-size);
+        .search-keyword {
+            width: @photo-min-size - @gutter-x-2;
+        }
+    }
+    @media only screen and (min-width : (@photos-min-no-wrap + @photo-size)) {
+        width: (3 * @photo-min-size);
+        .search-keyword {
+            width: 2 * @photo-min-size - @gutter-x-2;
+        }
+    }
+    @media only screen and (min-width : (@photos-min-no-wrap + ( 2 * @photo-size))) {
+        width: (4 * @photo-min-size);
+        .search-keyword {
+            width: 3 * @photo-min-size - @gutter-x-2;
+        }
+    }
+    @media only screen and (min-width : (@photos-min-no-wrap + ( 3 * @photo-size))) {
+        width: (5 * @photo-min-size);
+        .search-keyword {
+            width: 4 * @photo-min-size - @gutter-x-2;
+        }
+    }
+}
+.photos{
+    display:inline-block;
+}
+.photo {
+    padding: @gutter;
+    padding-bottom: @gutter - 4px;
+    margin: @gutter;
+    border: 2px solid grey;
+    background-color: lightgrey;
+
+    float: left;
+}
+
+/*keyword search formatting*/
+.search {
+    &-keyword {
+        min-width: @photo-min-size - @gutter;
+        text-align: center;
+        font-family: monospace;
+        margin-top: @gutter !important;
+        margin-left: @gutter;
+        float:left;
+    }
+    &-button {
+        margin-top: @gutter !important;
+        width: @photo-min-size - @gutter-x-2;
+        margin-right: @gutter;
+        float:right;
+    }
+}
+
+/*Links at bottom of page*/
+.pagination {
+    display: inline-block;
+}
