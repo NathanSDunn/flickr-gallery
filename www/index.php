@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/../vendor/autoload.php');
+require_once(__DIR__ . '/../src/classLoader.php');
 use FlickrGallery\Controller\Gallery;
 use FlickrGallery\Model\PhotoSearch;
 use FlickrGallery\Model\HttpsGetWrapper;
