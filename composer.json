@@ -23,9 +23,6 @@
             ],            
             "FlickrGallery\\Model\\": [
                 "src\\model"
-            ],         
-            "FlickrGallery\\Model\\RPC\\": [
-                "src\\model\\rpc"
             ]
         }
     }
